@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+#
+# (C) 2013 by Johan Stenarson (johan dot stenarson at gmail dot com)
+#
+# Add dzen control sequences to make text gradient when viewed with dzen
+#
+# Sample:
+#    conky | gradient.pl FF0000 0000FF | dzen
+#
+# Requirements:
+# Color::Spectrum available from CPAN
+#
+
+use strict;
+use warnings;
+
+use Color::Spectrum qw(generate);
+
+usage() unless @ARGV == 2;
+
+while(<STDIN>)
+{
+   my $string = $_;
+   s/ //g;                    # Space doesn't show color so skip it
+   s/\^[a-z]+\([^)]*\)//g;    # Neither does control sequences
+   my $steps = length($_);
+
+   my @colors = generate($steps, "#$ARGV[0]", "#$ARGV[1]");
+
+   my $out = 1;
+   my $c = 0;
+   while ($string =~ /(.)/g) {
+      if( $out == 1 && $1 eq "^") { $out = 0; }
+      if( $out == 1 && $1 ne " ") { printf "^fg(%s)", $colors[ $c++ ]; } 
+      print $1;
+      if( $out == 0 && $1 eq ")") { $out = 1; }
+   }
+   $| = 1;
+   print "\n";
+   $| = 0;
+}
+
+exit( 0 );
+
+sub usage
+{
+   print "Usage: $0 <RRGGBB> <RRGGBB>\n";
+   exit(1);
+}
+
