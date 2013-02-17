@@ -32,7 +32,11 @@ gradient will read text from standard input and calculate the number of steps in
 The result is then printed to standard output.  
 In order to make a gradient from red to green, using conky and dzen, this is what you would run:
     
-    conky | gradient FF0000 00FF00 | dzen ...
+    conky | gradient FF0000 0000FF | dzen ...
+
+And the result will look something like this:
+
+![Sample output of above code](http://stenarson.com/media/misc/gradient-conky_red2blue.png "Gradient text, red to blue")
 
 Known bugs
 ----------
